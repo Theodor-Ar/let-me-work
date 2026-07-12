@@ -1,7 +1,6 @@
 """Точка входа: инициализация бота, запуск поллинга"""
 
 from src.config.config import BOT_TOKEN
-from src.forms.job_questions import router as user_router
 from src.handlers import router as main_router
 from src.middlewares.middlewares import TranslateMiddleware
 
