@@ -30,3 +30,11 @@ FIFTH_QUESTION = """
 из-за которых вы точно откажетесь от оффера (например, 
 тайм-трекеры, дресс-код, микроменеджмент).
 """
+
+job_servey_questions = [
+    FIRST_QUESTION,
+    SECOND_QUESTION,
+    THIRD_QUESTION,
+    FOURTH_QUESTION,
+    FIFTH_QUESTION
+]
