@@ -56,7 +56,14 @@ async def start_survey(callback: CallbackQuery, state: FSMContext):
 )
 async def next_question(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    question_index = data.get("question_index", 0) + 1
+    question_index = data.get("question_index", 0)
+    answers = data.get("answers")
+
+    if len(answers) <= question_index:
+        await callback.answer("Ответ не может быть пустым сообщением", show_alert=True)
+        return
+
+    question_index += 1
     await state.update_data(question_index=question_index)
 
     keyboard = job_prev_stop_next_kb if question_index < len(questions) - 1 else job_prev_stop_done_kb

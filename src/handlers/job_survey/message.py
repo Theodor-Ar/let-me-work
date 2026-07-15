@@ -11,6 +11,9 @@ router = Router()
 
 @router.message(JobSurvey.active_survey)
 async def saving_answer(message: Msg, state: FSMContext):
+    if not (message.text and message.text.strip()):
+        return
+
     data = await state.get_data()
 
     question_index: int = data.get("question_index", 0)
