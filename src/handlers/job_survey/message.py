@@ -24,3 +24,4 @@ async def saving_answer(message: Msg, state: FSMContext):
     )
 
     await state.update_data(answers=answers)
+    await state.update_data(last_user_message_id=message.message_id)
