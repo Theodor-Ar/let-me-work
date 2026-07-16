@@ -17,14 +17,18 @@ async def saving_answer(message: Msg, state: FSMContext):
     data = await state.get_data()
 
     question_index: int = data.get("question_index", 0)
-    answers: list = data.get("answers", [])
+    answers: dict = data.get("answers", {})
 
-    answers.append(
-        {
-            "question": questions[question_index],
-            "answer": message.text
-        }
-    )
+    question = questions[question_index]
+    answer = message.text
+
+    if question in answers:
+        answers[question] += f"\n{answer}"
+    else:
+        answers.update({question: answer})
 
     await state.update_data(answers=answers)
-    await state.update_data(last_user_message_id=message.message_id)
+
+    last_user_messages_id: list = data.get("last_user_messages_id", [])
+    last_user_messages_id.append(message.message_id)
+    await state.update_data(last_user_messages_id=last_user_messages_id)

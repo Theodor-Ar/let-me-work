@@ -16,18 +16,19 @@ router = Router()
 
 async def delete_messages(callback: CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
-    last_user_message_id = data.get("last_user_message_id")
+    last_user_messages_id = data.get("last_user_messages_id")
 
-    if last_user_message_id is not None:
+    if last_user_messages_id:
         try:
-            await callback.bot.delete_message(
-                chat_id=callback.message.chat.id,
-                message_id=last_user_message_id
-            )
+            for id in last_user_messages_id:
+                await callback.bot.delete_message(
+                    chat_id=callback.message.chat.id,
+                    message_id=id
+                )
         except TelegramBadRequest:
             pass
         finally:
-            await state.update_data(last_user_message_id=None)
+            await state.update_data(last_user_messages_id=[])
 
     await callback.message.delete()
 
@@ -38,7 +39,7 @@ async def start_survey(callback: CallbackQuery, state: FSMContext):
 
     await state.update_data(
         question_index = 0,
-        answers = [],
+        answers = {},
     )
 
     await delete_messages(callback, state)
@@ -116,9 +117,9 @@ async def completed_survey(callback: CallbackQuery, state: FSMContext):
     await delete_messages(callback, state)
 
     data = await state.get_data()
-    answers = data.get("answers", [])
-    for answer in answers:
-        await callback.message.answer(f"Вопрос: {answer['question']}\nОтвет: \n{answer['answer']}")
+    answers: dict = data.get("answers")
+    for question, answer in answers.items():
+        await callback.message.answer(f"Вопрос: {question}\nОтвет: \n{answer}")
 
     await state.clear()
     await callback.answer()
