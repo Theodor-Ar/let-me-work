@@ -42,6 +42,23 @@ async def get_cur_question(state: FSMContext) -> str:
     return question
 
 
+async def get_previous_answer(state: FSMContext) -> str | None:
+    data = await state.get_data()
+    answers: dict = data.get("answers", {})
+    cur_question = await get_cur_question(state)
+
+    if cur_question in answers.keys():
+        return answers[cur_question]
+    return
+
+
+async def previous_answer_label(state: FSMContext) -> str:
+    previous_answer = await get_previous_answer(state)
+    if previous_answer:
+        return f"\n\nВаш предыдущий ответ:\n{previous_answer}"
+    return ""
+
+
 async def send_question(
         callback: CallbackQuery,
         state: FSMContext,
@@ -49,8 +66,9 @@ async def send_question(
 ):
     progress_bar = await get_progress_bar(state)
     question = await get_cur_question(state)
-    text = progress_bar + question
+    previous_answer = await previous_answer_label(state)
 
+    text = progress_bar + question + previous_answer
     keyboard = await get_keyboard(state)
 
     await callback.message.answer(

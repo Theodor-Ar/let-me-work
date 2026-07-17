@@ -61,7 +61,7 @@ def job_prev_stop_next_kb() -> InlineKeyboardMarkup:
           inline_keyboard=[
                [
                     InlineKeyboardButton(
-                         text=NEXT_BUTTON_TEXT,
+                         text=BACK_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="prev").pack()
                     ),
                     InlineKeyboardButton(
