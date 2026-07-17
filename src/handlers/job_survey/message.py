@@ -4,7 +4,7 @@ from aiogram.types import Message as Msg
 from aiogram.fsm.context import FSMContext
 
 from src.forms.job_survey import JobSurvey
-from src.handlers.job_survey.job_questions import job_servey_questions as questions
+from src.phrases.phrases import job_servey_questions as questions
 
 
 router = Router()

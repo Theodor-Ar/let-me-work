@@ -7,6 +7,13 @@ from aiogram.types import (
 )
 
 from src.forms.job_survey import JobSurveyBar
+from src.phrases.phrases import (
+     BACK_BUTTON_TEXT,
+     NEXT_BUTTON_TEXT,
+     STOP_BUTTON_TEXT,
+     DONE_BUTTON_TEXT,
+     START_SURVEY_BUTTON_TEXT
+)
 
 
 def back_next_keyboard():
@@ -25,7 +32,7 @@ def back_next_keyboard():
 def help_keyboard():   
      keyboard = InlineKeyboardMarkup(
           inline_keyboard=[
-               [InlineKeyboardButton(text='Начать потбор вакансий', callback_data='start_job_survey')],
+               [InlineKeyboardButton(text='Начать потбор вакансий', callback_data='job_survey_introduction')],
                [InlineKeyboardButton(text='Помощь', callback_data='help')]
           ],
           resize_keyboard=True
@@ -37,11 +44,11 @@ def job_stop_next_kb() -> InlineKeyboardMarkup:
           inline_keyboard=[
                [
                     InlineKeyboardButton(
-                         text="стоп",
+                         text=STOP_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="stop").pack()
                     ),
                     InlineKeyboardButton(
-                         text="далее",
+                         text=NEXT_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="next").pack()
                     )
                ]
@@ -54,15 +61,15 @@ def job_prev_stop_next_kb() -> InlineKeyboardMarkup:
           inline_keyboard=[
                [
                     InlineKeyboardButton(
-                         text="назад",
+                         text=NEXT_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="prev").pack()
                     ),
                     InlineKeyboardButton(
-                         text="стоп",
+                         text=STOP_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="stop").pack()
                     ),
                     InlineKeyboardButton(
-                         text="далее",
+                         text=NEXT_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="next").pack()
                     )
                ]
@@ -75,16 +82,29 @@ def job_prev_stop_done_kb() -> InlineKeyboardMarkup:
           inline_keyboard=[
                [
                     InlineKeyboardButton(
-                         text="назад",
+                         text=BACK_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="prev").pack()
                     ),
                     InlineKeyboardButton(
-                         text="стоп",
+                         text=STOP_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="stop").pack()
                     ),
                     InlineKeyboardButton(
-                         text="готово",
+                         text=DONE_BUTTON_TEXT,
                          callback_data=JobSurveyBar(action="done").pack()
+                    )
+               ]
+          ]
+     )
+     return keyboard
+
+def job_introduction_kb():
+     keyboard = InlineKeyboardMarkup(
+          inline_keyboard=[
+               [
+                    InlineKeyboardButton(
+                         text=START_SURVEY_BUTTON_TEXT,
+                         callback_data="start_job_survey"
                     )
                ]
           ]
