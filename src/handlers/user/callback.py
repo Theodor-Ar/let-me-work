@@ -1,22 +1,23 @@
 
-from aiogram import Router
-from aiogram.fsm.context import FSMContext
+from aiogram import Router, F
 from aiogram.filters import Command as Cmd
 from aiogram.types import (
     Message as Msg, 
     CallbackQuery
 )
 
-from fluentogram import TranslatorRunner
-
-from src.phrases.phrases import *
+from src.phrases.phrases import (
+    job_servey_questions,
+    resume_survey_questions
+)
 from src.keyboards.keyboards import *
+from src.handlers.survey import Survey
 
 
 router = Router()
 
 @router.message(Cmd('start'))
-async def start(message: Msg, locale: TranslatorRunner):
+async def start(message: Msg):
     first_name = message.from_user.first_name
     start_text = (
         f"Привет, {first_name}!\n\n"
@@ -25,14 +26,36 @@ async def start(message: Msg, locale: TranslatorRunner):
     )
     await message.answer(
          text=start_text,
-         reply_markup=help_keyboard()
+         reply_markup=start_keyboard()
     )
 
-@router.callback_query(lambda c: c.data == 'help')
+@router.callback_query(F.data == 'help')
 async def help(callback: CallbackQuery):
-     help_text = 'Вот доступные функции'
-     await callback.message.answer(
+    help_text = 'Вот доступные функции'
+    await callback.message.answer(
         text=help_text, 
-        reply_markup=back_next_keyboard()
-     )
-     await callback.message.delete()
+    )
+    await callback.message.delete()
+
+@router.callback_query(F.data == 'job_survey')
+async def job_survey(callback: CallbackQuery):
+    job_survey: Survey = await make_survey(callback, job_servey_questions)
+    await job_survey.start()
+
+
+@router.callback_query(F.data == 'resume_survey')
+async def resume_survey(callback: CallbackQuery):
+    resume_survey: Survey = await make_survey(callback, resume_survey_questions)
+    await resume_survey.start()
+
+
+async def make_survey(callback: CallbackQuery, questions: list) -> dict:
+    await callback.message.delete()
+    chat_id = callback.message.chat.id
+    survey = Survey(
+        router=router,
+        questions=questions,
+        chat_id=chat_id
+    )
+    return survey
+
