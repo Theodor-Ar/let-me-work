@@ -8,11 +8,8 @@ from aiogram.types import (
     CallbackQuery
 )
 
-from src.phrases.phrases import (
-    INTRODUCTION_TEXT,
-    NOT_WORKONG_FUNC_TEXT
-)
-from src.config.config import BOT_TOKEN
+from src.phrases.phrases import INTRODUCTION_TEXT
+from src.config.config import settings
 from src.keyboards.keyboards import (
     survey_intro_kb,
     survey_start_kb,
@@ -25,17 +22,15 @@ class SurveyFSM(StatesGroup):
     active_survey = State()
 
 class Survey:
-    def __init__(self, router: Router, questions: list, chat_id: int) -> None:
+    def __init__(self, router: Router, questions: list, chat_id: int, on_complete=None) -> None:
         self.router = router
         self.questions = questions
         self.chat_id = chat_id
-        self.bot = Bot(token=BOT_TOKEN)
+        self.bot = Bot(token=settings.bot_token.get_secret_value())
         self.data: dict | None = None 
+        self.on_complete = on_complete
 
         self.__handler()
-
-    async def get_data(self) -> dict:
-        await self.data
     
     async def start(self):
         bot = self.bot
@@ -165,7 +160,7 @@ class Survey:
             data = await state.get_data()
             question_index = data.get("question_index", 0) - 1
 
-            await state.update_data(question_index=question_index)
+            await state.update_data(question_index=max(0, question_index))
             await self.__delete_messages(callback, state)
             await self.__send_question(callback, state, notification="Ответ сохранён")
 
@@ -183,12 +178,14 @@ class Survey:
             await self.__delete_messages(callback, state)
             data = await state.get_data()
             self.data = data
-            await callback.message.answer(NOT_WORKONG_FUNC_TEXT)
-            # answers = data.get("answers")
-            # for q, a in answers.items():
-            #     await callback.message.answer(f"{q}\n\n{a}")
+            answers = data.get("answers")
             await state.clear()
-            return
+
+            if self.on_complete:
+                await self.on_complete(
+                    callback=callback,
+                    answers=answers
+                )
             
 
         @router.message(SurveyFSM.active_survey)

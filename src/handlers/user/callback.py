@@ -6,11 +6,14 @@ from aiogram.types import (
     CallbackQuery
 )
 
+from typing import Callable
+
 from src.phrases.phrases import (
     job_servey_questions,
-    resume_survey_questions
+    resume_survey_questions,
+    NOT_WORKONG_FUNC_TEXT
 )
-from src.keyboards.keyboards import *
+from src.keyboards.keyboards import start_keyboard
 from src.handlers.survey import Survey
 
 
@@ -39,23 +42,36 @@ async def help(callback: CallbackQuery):
 
 @router.callback_query(F.data == 'job_survey')
 async def job_survey(callback: CallbackQuery):
-    job_survey: Survey = await make_survey(callback, job_servey_questions)
-    await job_survey.start()
+    job_survey = await create_survey(
+        callback,
+        job_servey_questions,
+        handle_job_answers
+    )
 
+async def handle_job_answers(callback: CallbackQuery, answers: dict) -> None:
+    await callback.message.answer(text=NOT_WORKONG_FUNC_TEXT)
 
 @router.callback_query(F.data == 'resume_survey')
 async def resume_survey(callback: CallbackQuery):
-    resume_survey: Survey = await make_survey(callback, resume_survey_questions)
-    await resume_survey.start()
+    resume_survey = await create_survey(
+        callback,
+        resume_survey_questions,
+        handle_resume_answers
+    )
 
+async def handle_resume_answers(callback: CallbackQuery, answers: dict) -> None:
+    await callback.message.answer(text=NOT_WORKONG_FUNC_TEXT)
+    # for q, a in answers.items():
+    #     await callback.message.answer(f"{q}\n\n{a}")
 
-async def make_survey(callback: CallbackQuery, questions: list) -> dict:
+async def create_survey(callback: CallbackQuery, questions: list, func: Callable) -> dict:
     await callback.message.delete()
     chat_id = callback.message.chat.id
     survey = Survey(
         router=router,
         questions=questions,
-        chat_id=chat_id
+        chat_id=chat_id,
+        on_complete=func
     )
-    return survey
+    await survey.start()
 
