@@ -1,17 +1,17 @@
-
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, ConfigDict, EmailStr
-from pydantic.networks import HttpUrl
+from datetime import UTC, datetime
 from enum import Enum
-from datetime import datetime, timezone
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic.networks import HttpUrl
 
 
 class UserVacancyHistory(BaseModel):
     id: int
     user_id: int
     vacancy_external_id: str
-    sent_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    sent_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -63,7 +63,9 @@ class Contacts(BaseModel):
     contact_email: EmailStr | None = None
     contact_phone: str | None = None
 
+
 # -- Вспомогательные классы --
+
 
 class Education(BaseModel):
     level: EducationLevel
@@ -71,50 +73,48 @@ class Education(BaseModel):
 
 
 class WorkFormat(str, Enum):
-    REMOTE = "remote"
-    OFFICE = "office"
-    HYBRID = "hybrid"
+    REMOTE = 'remote'
+    OFFICE = 'office'
+    HYBRID = 'hybrid'
 
 
 class Currency(str, Enum):
-    RUB = "RUB"  # Российский рубль
-    USD = "USD"  # Доллар США
-    EUR = "EUR"  # Евро
-    GBP = "GBP"  # Фунт стерлингов
-    CHF = "CHF"  # Швейцарский франк
-    JPY = "JPY"  # Японская иена
-    CNY = "CNY"  # Китайский юань
-    AUD = "AUD"  # Австралийский доллар
-    CAD = "CAD"  # Канадский доллар
-    AED = "AED"  # Дирхам ОАЭ
-    SGD = "SGD"  # Сингапурский доллар
+    RUB = 'RUB'  # Российский рубль
+    USD = 'USD'  # Доллар США
+    EUR = 'EUR'  # Евро
+    GBP = 'GBP'  # Фунт стерлингов
+    CHF = 'CHF'  # Швейцарский франк
+    JPY = 'JPY'  # Японская иена
+    CNY = 'CNY'  # Китайский юань
+    AUD = 'AUD'  # Австралийский доллар
+    CAD = 'CAD'  # Канадский доллар
+    AED = 'AED'  # Дирхам ОАЭ
+    SGD = 'SGD'  # Сингапурский доллар
 
 
 class EmploymentType(str, Enum):
-    FULL_TIME = "full_time"
-    PART_TIME = "part_time"
-    PROJECT = "project"
-    INTERNSHIP = "internship"
+    FULL_TIME = 'full_time'
+    PART_TIME = 'part_time'
+    PROJECT = 'project'
+    INTERNSHIP = 'internship'
 
 
 class ExperienceLevel(str, Enum):
-    UNKNOWN = "unknown"
-    START = "start"
-    SPECIALIST = "specialist"
-    EXPERT = "expert"
-    MANAGEMENT = "management"
-    TOP_MANAGEMENT = "top_management"
+    UNKNOWN = 'unknown'
+    START = 'start'
+    SPECIALIST = 'specialist'
+    EXPERT = 'expert'
+    MANAGEMENT = 'management'
+    TOP_MANAGEMENT = 'top_management'
 
 
 class EducationLevel(str, Enum):
-    NOT_REQUIRED = "not_required"
-    HIGHER = "higher"
-    INCOMPLETE_HIGHER = "incomplete_higher"
-    BACHELOR = "bachelor"
-    MASTER = "master"
-    SPECIALIST = "specialist"
-    SECONDARY_SPECIAL = "secondary_special"
-    SECONDARY = "secondary"
-    UNKNOWN = "unknown"
-
-
+    NOT_REQUIRED = 'not_required'
+    HIGHER = 'higher'
+    INCOMPLETE_HIGHER = 'incomplete_higher'
+    BACHELOR = 'bachelor'
+    MASTER = 'master'
+    SPECIALIST = 'specialist'
+    SECONDARY_SPECIAL = 'secondary_special'
+    SECONDARY = 'secondary'
+    UNKNOWN = 'unknown'

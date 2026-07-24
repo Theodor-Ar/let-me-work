@@ -1,17 +1,16 @@
-
 NOT_WORKONG_FUNC_TEXT = """
 ⚠️ Извините, в данный момент функция не работает ⚠️
 """
 
-BACK_BUTTON_TEXT = "Назад"
+BACK_BUTTON_TEXT = 'Назад'
 
-NEXT_BUTTON_TEXT = "Далее"
+NEXT_BUTTON_TEXT = 'Далее'
 
-STOP_BUTTON_TEXT = "❌ Стоп"
+STOP_BUTTON_TEXT = '❌ Стоп'
 
-DONE_BUTTON_TEXT = "✅ Готово"
+DONE_BUTTON_TEXT = '✅ Готово'
 
-START_SURVEY_BUTTON_TEXT = "Перейти к вопросам"
+START_SURVEY_BUTTON_TEXT = 'Перейти к вопросам'
 
 FIRST_QUESTION = """
 Расскажите о вашем опыте.
@@ -105,12 +104,12 @@ job_servey_questions = [
     SECOND_QUESTION,
     THIRD_QUESTION,
     FOURTH_QUESTION,
-    FIFTH_QUESTION
+    FIFTH_QUESTION,
 ]
 
 resume_survey_questions = [
     RESUME_QUESTION_1,
     RESUME_QUESTION_2,
     RESUME_QUESTION_3,
-    RESUME_QUESTION_4
+    RESUME_QUESTION_4,
 ]

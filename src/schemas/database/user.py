@@ -1,6 +1,6 @@
+from datetime import UTC, datetime
 
-from pydantic import BaseModel, Field, ConfigDict
-from datetime import datetime, timezone
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class User(BaseModel):
@@ -16,8 +16,8 @@ class User(BaseModel):
     can_join_groups: bool
     can_read_all_group_messages: bool
     supports_inline_queries: bool
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     blocked_at: datetime | None = None
 
     is_admin: bool = False
