@@ -1,10 +1,11 @@
 """Точка входа: инициализация бота, запуск поллинга"""
 
-from src.config.config import settings
-from src.handlers import router as main_router
+import asyncio
 
 from aiogram import Bot, Dispatcher
-import asyncio
+
+from src.config import settings
+from src.handlers import router as main_router
 
 
 async def main():
@@ -12,7 +13,7 @@ async def main():
     dp.include_router(main_router)
     bot = Bot(token=settings.bot_token.get_secret_value())
 
-    try: 
+    try:
         await dp.start_polling(bot)
     except ValueError as e:
         print(e)
@@ -22,5 +23,5 @@ async def main():
         await bot.session.close()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     asyncio.run(main())
