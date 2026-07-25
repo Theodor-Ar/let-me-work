@@ -1,4 +1,4 @@
-NOT_WORKONG_FUNC_TEXT = """
+NOT_WORKING_FUNC_TEXT = """
 ⚠️ Извините, в данный момент функция не работает ⚠️
 """
 
@@ -99,7 +99,7 @@ RESUME_QUESTION_4 = """
 3. Короткий блок «О себе» (ваши софт-скиллы, увлечения или то, что не вошло в прошлые ответы).
 """
 
-job_servey_questions = [
+job_survey_questions = [
     FIRST_QUESTION,
     SECOND_QUESTION,
     THIRD_QUESTION,

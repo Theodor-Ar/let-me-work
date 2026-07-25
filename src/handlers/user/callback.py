@@ -5,13 +5,13 @@ from aiogram.filters import Command as Cmd
 from aiogram.types import CallbackQuery
 from aiogram.types import Message as Msg
 
-from src.handlers.survey import Survey
-from src.keyboards.keyboards import start_keyboard
-from src.phrases.phrases import (
-    NOT_WORKONG_FUNC_TEXT,
-    job_servey_questions,
+from ...keyboards import start_keyboard
+from ...phrases import (
+    NOT_WORKING_FUNC_TEXT,
+    job_survey_questions,
     resume_survey_questions,
 )
+from ..survey import Survey
 
 router = Router()
 
@@ -38,11 +38,11 @@ async def help(callback: CallbackQuery):
 
 @router.callback_query(F.data == 'job_survey')
 async def job_survey(callback: CallbackQuery):
-    await create_survey(callback, job_servey_questions, handle_job_answers)
+    await create_survey(callback, job_survey_questions, handle_job_answers)
 
 
 async def handle_job_answers(callback: CallbackQuery, answers: dict) -> None:
-    await callback.message.answer(text=NOT_WORKONG_FUNC_TEXT)
+    await callback.message.answer(text=NOT_WORKING_FUNC_TEXT)
 
 
 @router.callback_query(F.data == 'resume_survey')
@@ -51,9 +51,7 @@ async def resume_survey(callback: CallbackQuery):
 
 
 async def handle_resume_answers(callback: CallbackQuery, answers: dict) -> None:
-    await callback.message.answer(text=NOT_WORKONG_FUNC_TEXT)
-    # for q, a in answers.items():
-    #     await callback.message.answer(f"{q}\n\n{a}")
+    await callback.message.answer(text=NOT_WORKING_FUNC_TEXT)
 
 
 async def create_survey(

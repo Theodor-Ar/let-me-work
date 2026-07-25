@@ -61,7 +61,6 @@ class Survey:
 
         if cur_question in answers:
             return answers[cur_question]
-        return
 
     async def __progress_bar(self, state: FSMContext) -> str:
         data = await state.get_data()
@@ -115,14 +114,6 @@ class Survey:
 
     def __handler(self):
         router = self.router
-
-        @router.callback_query(F.data == 'survey_intro')
-        async def intro(callback: CallbackQuery, state: FSMContext):
-            await callback.message.delete()
-            await callback.message.answer(
-                text=INTRODUCTION_TEXT, reply_markup=survey_intro_kb()
-            )
-            await callback.answer()
 
         @router.callback_query(F.data == 'survey_start')
         async def start(callback: CallbackQuery, state: FSMContext):

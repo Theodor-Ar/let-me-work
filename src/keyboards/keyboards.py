@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from src.phrases.phrases import (
+from ..phrases import (
     BACK_BUTTON_TEXT,
     DONE_BUTTON_TEXT,
     NEXT_BUTTON_TEXT,

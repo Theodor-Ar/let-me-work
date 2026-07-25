@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from pydantic.networks import HttpUrl
@@ -72,13 +72,13 @@ class Education(BaseModel):
     specialization: str
 
 
-class WorkFormat(str, Enum):
+class WorkFormat(StrEnum):
     REMOTE = 'remote'
     OFFICE = 'office'
     HYBRID = 'hybrid'
 
 
-class Currency(str, Enum):
+class Currency(StrEnum):
     RUB = 'RUB'  # Российский рубль
     USD = 'USD'  # Доллар США
     EUR = 'EUR'  # Евро
@@ -92,14 +92,14 @@ class Currency(str, Enum):
     SGD = 'SGD'  # Сингапурский доллар
 
 
-class EmploymentType(str, Enum):
+class EmploymentType(StrEnum):
     FULL_TIME = 'full_time'
     PART_TIME = 'part_time'
     PROJECT = 'project'
     INTERNSHIP = 'internship'
 
 
-class ExperienceLevel(str, Enum):
+class ExperienceLevel(StrEnum):
     UNKNOWN = 'unknown'
     START = 'start'
     SPECIALIST = 'specialist'
@@ -108,7 +108,7 @@ class ExperienceLevel(str, Enum):
     TOP_MANAGEMENT = 'top_management'
 
 
-class EducationLevel(str, Enum):
+class EducationLevel(StrEnum):
     NOT_REQUIRED = 'not_required'
     HIGHER = 'higher'
     INCOMPLETE_HIGHER = 'incomplete_higher'

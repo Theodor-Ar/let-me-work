@@ -4,7 +4,7 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 
-from src.config.config import settings
+from src.config import settings
 from src.handlers import router as main_router
 
 
