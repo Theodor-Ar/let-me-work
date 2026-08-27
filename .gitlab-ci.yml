@@ -1,0 +1,31 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build_job:
+  stage: build
+  before_script:
+    - echo "before build"
+  script:
+    - echo "start build" 
+  after_script:
+    - echo "after build"
+
+test_job:
+  stage: test
+  before_script:
+    - echo "before test"
+  script:
+    - echo "start test" 
+  after_script:
+    - echo "after test"
+
+deploy_job:
+  stage: deploy
+  before_script:
+    - echo "before deploy"
+  script:
+    - echo "start deploy" 
+  after_script:
+    - echo "after deploy"
