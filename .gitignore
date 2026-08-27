@@ -220,5 +220,6 @@ __marimo__/
 # macOS
 .DS_Store
 
-# VS Code (настройки редактора)
+# VS Code и PyCharm (настройки редакторов)
 .vscode/
+.idea/
