@@ -1,5 +1,6 @@
 variables:
   IMAGE_NAME: "$CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA"
+  DOCKERFILE_PATH: "docker/small.Dockerfile"
 
 stages:
   - build
@@ -11,7 +12,8 @@ build_job:
   before_script:
     - echo "$PASSWORD" | docker login -u "$USER" --password-stdin "$CI_REGISTRY"
   script:
-    - echo "start build" 
+    - docker build -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" .
+    - docker push "$IMAGE_NAME"
   after_script:
     - echo "after build"
   tags:
@@ -31,9 +33,11 @@ test_job:
 deploy_job:
   stage: deploy
   before_script:
-    - echo "before deploy"
+    - echo "$PASSWORD" | docker login -u "$USER" --password-stdin "$CI_REGISTRY"
+    - echo "IMAGE_NAME=$IMAGE_NAME" >> .env
   script:
-    - echo "start deploy" 
+    - docker compose pull tg-bot
+    - docker compose up -d tg-bot
   after_script:
     - echo "after deploy"
   tags:

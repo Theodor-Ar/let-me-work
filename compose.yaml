@@ -3,6 +3,7 @@ name: let-me-work
 
 services:
   tg-bot:
+    image: ${IMAGE_NAME}
     build: 
       context: .
       dockerfile: docker/small.Dockerfile
