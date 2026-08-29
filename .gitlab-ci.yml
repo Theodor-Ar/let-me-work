@@ -1,3 +1,6 @@
+variables:
+  IMAGE_NAME: "$CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA"
+
 stages:
   - build
   - test
@@ -6,11 +9,13 @@ stages:
 build_job:
   stage: build
   before_script:
-    - echo "before build"
+    - echo "$PASSWORD" | docker login -u "$USER" --password-stdin "$CI_REGISTRY"
   script:
     - echo "start build" 
   after_script:
     - echo "after build"
+  tags:
+    - local
 
 test_job:
   stage: test
@@ -20,6 +25,8 @@ test_job:
     - echo "start test" 
   after_script:
     - echo "after test"
+  tags:
+    - local
 
 deploy_job:
   stage: deploy
@@ -29,3 +36,5 @@ deploy_job:
     - echo "start deploy" 
   after_script:
     - echo "after deploy"
+  tags:
+    - local
