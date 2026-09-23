@@ -1,8 +1,7 @@
 workflow:
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
-      when: never
-    - when: always
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 variables:
   IMAGE_NAME: "$CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA"
@@ -10,10 +9,36 @@ variables:
   UV_CACHE_DIR: ".uv-cache"
 
 stages:
-  - test
   - lint
+  - test
   - build
   - deploy
+
+lint_job:ruff:
+  image: ghcr.io/astral-sh/ruff
+  stage: lint
+  script:
+    - ruff check .
+    - ruff format --check .
+  tags:
+    - local
+
+lint_job:mypy:
+  image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+  stage: lint
+  cache:
+    key:
+      files:
+        - uv.lock
+    paths:
+      - $UV_CACHE_DIR
+      - .mypy_cache
+  before_script:
+    - uv sync --frozen
+  script:
+    - uv run mypy src tests
+  tags:
+    - local
 
 test_job:
   stage: test
@@ -22,54 +47,41 @@ test_job:
     key:
       files:
         - uv.lock
-      paths:
-        - $UV_CACHE_DIR
+    paths:
+      - $UV_CACHE_DIR
   before_script:
     - uv sync --frozen
   script:
-    - uv run pytest -v --junitxml=report.xml --cov=. --cov-report=term
-  after_script:
-    - echo "Тестирование завершено со статусом $CI_JOB_STATUS"
-    - uv run coverage report 
+    - uv run pytest -v --junitxml=report.xml --cov=src --cov-report=term
   coverage: '/TOTAL.*\s+(\d+[\d\.]*\%)/'
   artifacts:
+    when: always
     reports:
       junit: report.xml
   tags:
     - local
 
-lint_job:
-  stage: lint
-  before_script:
-    - echo "before lint"
-  script:
-    - echo "start lint" 
-  after_script:
-    - echo "after lint"
-  tags:
-    - local
-
 build_job:
   stage: build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
   before_script:
-    - echo "$PASSWORD" | docker login -u "$USER" --password-stdin "$CI_REGISTRY"
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
     - docker build -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" .
     - docker push "$IMAGE_NAME"
-  after_script:
-    - echo "after build"
   tags:
     - local
 
 deploy_job:
   stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
   before_script:
     - echo "$PASSWORD" | docker login -u "$USER" --password-stdin "$CI_REGISTRY"
     - echo "IMAGE_NAME=$IMAGE_NAME" >> .env
   script:
     - docker compose pull tg-bot
     - docker compose up -d tg-bot
-  after_script:
-    - echo "after deploy"
   tags:
     - local
