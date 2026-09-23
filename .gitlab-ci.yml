@@ -1,11 +1,53 @@
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: never
+    - when: always
+
 variables:
   IMAGE_NAME: "$CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA"
   DOCKERFILE_PATH: "docker/small.Dockerfile"
+  UV_CACHE_DIR: ".uv-cache"
 
 stages:
-  - build
   - test
+  - lint
+  - build
   - deploy
+
+test_job:
+  stage: test
+  image: ghcr.io/astral-sh/uv:python3.12-alpine
+  cache:
+    key:
+      files:
+        - uv.lock
+      paths:
+        - $UV_CACHE_DIR
+  before_script:
+    - uv sync --frozen
+  script:
+    - uv run pytest -v --junitxml=report.xml --cov=. --cov-report=term
+  after_script:
+    - echo "Тестирование завершено со статусом $CI_JOB_STATUS"
+    - uv run coverage report 
+  coverage: '/TOTAL.*\s+(\d+[\d\.]*\%)/'
+  artifacts:
+    reports:
+      junit: report.xml
+  tags:
+    - local
+
+lint_job:
+  stage: lint
+  before_script:
+    - echo "before lint"
+  script:
+    - echo "start lint" 
+  after_script:
+    - echo "after lint"
+  tags:
+    - local
 
 build_job:
   stage: build
@@ -16,17 +58,6 @@ build_job:
     - docker push "$IMAGE_NAME"
   after_script:
     - echo "after build"
-  tags:
-    - local
-
-test_job:
-  stage: test
-  before_script:
-    - echo "before test"
-  script:
-    - echo "start test" 
-  after_script:
-    - echo "after test"
   tags:
     - local
 

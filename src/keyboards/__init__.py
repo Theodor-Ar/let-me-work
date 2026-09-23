@@ -3,6 +3,7 @@
 from .keyboards import (
     start_keyboard,
     survey_base_kb,
+    survey_done_buttom,
     survey_done_kb,
     survey_intro_kb,
     survey_start_kb,
@@ -14,4 +15,5 @@ __all__ = [
     "survey_done_kb",
     "survey_intro_kb",
     "survey_start_kb",
+    "survey_done_buttom",
 ]

@@ -5,12 +5,13 @@ from aiogram.filters import Command as Cmd
 from aiogram.types import CallbackQuery
 from aiogram.types import Message as Msg
 
-from ...keyboards import start_keyboard
-from ...phrases import (
+from keyboards import start_keyboard
+from phrases import (
     NOT_WORKING_FUNC_TEXT,
     job_survey_questions,
     resume_survey_questions,
 )
+
 from ..survey import Survey
 
 router = Router()
@@ -60,6 +61,6 @@ async def create_survey(
     await callback.message.delete()
     chat_id = callback.message.chat.id
     survey = Survey(
-        router=router, questions=questions, chat_id=chat_id, on_complete=func
+        router=router, questions=questions, chat_id=chat_id, on_complete_func=func
     )
     await survey.start()

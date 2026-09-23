@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from ..phrases import (
+from phrases import (
     BACK_BUTTON_TEXT,
     DONE_BUTTON_TEXT,
     NEXT_BUTTON_TEXT,
@@ -87,6 +87,19 @@ def survey_done_kb():
                 InlineKeyboardButton(
                     text=STOP_BUTTON_TEXT, callback_data='survey_stop'
                 ),
+                InlineKeyboardButton(
+                    text=DONE_BUTTON_TEXT, callback_data='survey_done'
+                ),
+            ]
+        ]
+    )
+    return keyboard
+
+
+def survey_done_buttom():
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
                 InlineKeyboardButton(
                     text=DONE_BUTTON_TEXT, callback_data='survey_done'
                 ),
