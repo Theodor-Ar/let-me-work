@@ -96,7 +96,7 @@ def survey_done_kb():
     return keyboard
 
 
-def survey_done_buttom():
+def survey_done_button():
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [

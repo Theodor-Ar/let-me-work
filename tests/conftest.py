@@ -49,8 +49,8 @@ async def storage():
         await tmp_storage.close()
 
 
-@pytest.fixture
-def state(storage):
+@pytest_asyncio.fixture
+async def state(storage):
     state = FSMContext(
         storage=storage,
         key=StorageKey(
@@ -58,6 +58,12 @@ def state(storage):
             chat_id=TEST_USER_CHAT.id,
             user_id=TEST_USER.id,
         ),
+    )
+    await state.update_data(
+        questions=TEST_QUESTIONS,
+        question_index=0,
+        answers={},
+        user_last_messages_ids=[],
     )
     return state
 
@@ -67,7 +73,5 @@ def survey(bot, router):
     survey = Survey(
         bot=bot,
         router=router,
-        chat_id=TEST_USER_CHAT.id,
-        questions=TEST_QUESTIONS,
     )
     return survey

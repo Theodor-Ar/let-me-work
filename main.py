@@ -1,11 +1,18 @@
 """Точка входа: инициализация бота, запуск поллинга"""
 
 import asyncio
+import logging
 
 from aiogram import Bot, Dispatcher
 
 from src.config import settings
 from src.handlers import router as main_router
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s | [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 async def main():
@@ -15,10 +22,8 @@ async def main():
 
     try:
         await dp.start_polling(bot)
-    except ValueError as e:
-        print(e)
-    except KeyError as e:
-        print(e)
+    except Exception as e:
+        logger.critical("Polling failed | %s", e, exc_info=True)
     finally:
         await bot.session.close()
 
