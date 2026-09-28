@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Callable
 
 from aiogram import F, Router
@@ -6,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 from aiogram.types import Message as Msg
 
-from handlers.survey import Survey, SurveyFSM
+from handlers.survey import Survey
 from keyboards import start_keyboard
 from phrases import (
     NOT_WORKING_FUNC_TEXT,
@@ -15,6 +16,7 @@ from phrases import (
 )
 
 router = Router()
+logger = logging.getLogger(__name__)
 
 
 @router.message(Cmd('start'))
@@ -26,6 +28,7 @@ async def start(message: Msg):
         'я помогу тебе с поиском вакансий'
     )
     await message.answer(text=start_text, reply_markup=start_keyboard())
+    logger.info("User started the bot | user_id=%s", message.from_user.id)
 
 
 @router.callback_query(F.data == 'help')
@@ -81,7 +84,6 @@ async def create_survey(
     if survey.bot is None:
         survey.bot = callback.bot
     await callback.message.delete()
-    await state.set_state(SurveyFSM.active_survey)
     survey.register_completion_handler(survey_type, func)
     await survey.start(
         state=state,

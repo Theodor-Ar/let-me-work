@@ -4,7 +4,7 @@ import pytest
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from handlers.survey import Survey, SurveyFSM
+from handlers.survey import Survey
 from handlers.user.callback import (
     create_survey,
     handle_job_answers,
@@ -102,7 +102,6 @@ async def test_create_survey(
 
     assert survey.bot is not None
     callback.message.delete.assert_awaited_once()
-    assert await state.get_state() == SurveyFSM.active_survey
     survey.register_completion_handler.assert_called_once_with('TEST', func)
     survey.start.assert_awaited_once_with(
         state=state,
