@@ -25,11 +25,12 @@ async def main():
     dp.include_router(main_router)
     bot = Bot(token=settings.bot_token.get_secret_value())
 
+    logger.info("Starting the bot...")
+
     try:
         await dp.start_polling(bot)
-        logger.info("Starting the bot...")
     except Exception:
-        logger.critical("Polling failed | %s", exc_info=True)
+        logger.critical("Polling failed", exc_info=True)
         raise
     finally:
         await bot.session.close()
