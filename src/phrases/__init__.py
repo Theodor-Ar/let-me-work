@@ -1,6 +1,7 @@
 from .phrases import (
     BACK_BUTTON_TEXT,
     DONE_BUTTON_TEXT,
+    INTRODUCTION_TEXT,
     NEXT_BUTTON_TEXT,
     NOT_WORKING_FUNC_TEXT,
     START_SURVEY_BUTTON_TEXT,
@@ -16,6 +17,7 @@ __all__ = [
     "DONE_BUTTON_TEXT",
     "NEXT_BUTTON_TEXT",
     "STOP_BUTTON_TEXT",
+    "INTRODUCTION_TEXT",
     "job_survey_questions",
     "resume_survey_questions",
 ]
